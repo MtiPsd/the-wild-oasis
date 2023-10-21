@@ -1,17 +1,12 @@
-import styled from "styled-components";
-import GlobalStyles from "./styles/GlobalStyles";
-
-const H1 = styled.h1`
-  font-size: 32rem;
-  width: 500px;
-`;
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <GlobalStyles />
-      <div></div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="dashboard" />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
