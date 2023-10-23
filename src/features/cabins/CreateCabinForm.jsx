@@ -10,45 +10,13 @@ import { Textarea } from "./../../ui/Textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
-
-const FormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
+import FormRow from "../../ui/FormRow";
 
 function CreateCabinForm() {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, getValues, formState } =
+    useForm();
+  const { errors } = formState;
+
   const queryClient = useQueryClient();
 
   const { mutate, isLoading: isCreating } = useMutation({
@@ -65,57 +33,91 @@ function CreateCabinForm() {
     mutate(data);
   }
 
+  function onError(errors) {
+    // do something if error ocurred
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow>
-        <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name")} />
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormRow error={errors?.name?.message} label="cabin name">
+        <Input
+          type="number"
+          id="name"
+          {...register("name", {
+            required: "This field is required",
+          })}
+        />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
+      <FormRow
+        label="max Capacity"
+        error={errors?.maxCapacity?.message}
+      >
         <Input
           type="number"
           id="maxCapacity"
-          {...register("maxCapacity")}
+          {...register("maxCapacity", {
+            required: "This field is required",
+            min: {
+              value: 1,
+              message: "Capacity should be at least 1",
+            },
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
+      <FormRow
+        label="regular Price"
+        error={errors?.regularPrice?.message}
+      >
         <Input
           type="number"
           id="regularPrice"
-          {...register("regularPrice")}
+          {...register("regularPrice", {
+            required: "This field is required",
+            min: {
+              value: 1,
+              message: "Price should be at least 1",
+            },
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+      <FormRow label="discount" error={errors?.discount?.message}>
         <Input
           type="number"
           id="discount"
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            required: "This field is required",
+            validate: (value) =>
+              value <= getValues().regularPrice ||
+              "Discount should be less than regular price",
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow
+        label="description"
+        error={errors?.description?.message}
+      >
         <Textarea
           type="number"
           id="description"
           defaultValue=""
-          {...register("description")}
+          {...register("description", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
+      <FormRow label="image" error={errors?.image?.message}>
         <FileInput
           id="image"
           accept="image/*"
-          // {...register("image")}
+          // {...register("image", {
+          //   required: "This field is required",
+          // })}
         />
       </FormRow>
 
