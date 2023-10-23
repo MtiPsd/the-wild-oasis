@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
@@ -13,10 +11,12 @@ import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
 function CreateCabinForm() {
+  // React Hook Forms ---
   const { register, handleSubmit, reset, getValues, formState } =
     useForm();
   const { errors } = formState;
 
+  // React Query  ---
   const queryClient = useQueryClient();
 
   const { mutate, isLoading: isCreating } = useMutation({
@@ -43,6 +43,7 @@ function CreateCabinForm() {
         <Input
           type="text"
           id="name"
+          disabled={isCreating}
           {...register("name", {
             required: "This field is required",
           })}
@@ -56,6 +57,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="maxCapacity"
+          disabled={isCreating}
           {...register("maxCapacity", {
             required: "This field is required",
             min: {
@@ -73,6 +75,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="regularPrice"
+          disabled={isCreating}
           {...register("regularPrice", {
             required: "This field is required",
             min: {
@@ -88,6 +91,7 @@ function CreateCabinForm() {
           type="number"
           id="discount"
           defaultValue={0}
+          disabled={isCreating}
           {...register("discount", {
             required: "This field is required",
             validate: (value) => {
@@ -108,6 +112,7 @@ function CreateCabinForm() {
           type="number"
           id="description"
           defaultValue=""
+          disabled={isCreating}
           {...register("description", {
             required: "This field is required",
           })}
@@ -118,6 +123,8 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
+          disabled={isCreating}
+
           // {...register("image", {
           //   required: "This field is required",
           // })}
