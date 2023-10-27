@@ -1,12 +1,12 @@
+import { useForm } from "react-hook-form";
+import { Textarea } from "./../../ui/Textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCabin } from "../../services/apiCabins";
+
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
-import { useForm } from "react-hook-form";
-// import Textarea from "../../ui/Textarea";
-import { Textarea } from "./../../ui/Textarea";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
@@ -30,7 +30,7 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -124,10 +124,9 @@ function CreateCabinForm() {
           id="image"
           accept="image/*"
           disabled={isCreating}
-
-          // {...register("image", {
-          //   required: "This field is required",
-          // })}
+          {...register("image", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
