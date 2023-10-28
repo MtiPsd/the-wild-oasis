@@ -140,7 +140,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           type="number"
           id="description"
           defaultValue=""
-          disabled={isWorking}
           {...register("description", {
             required: "This field is required",
           })}
