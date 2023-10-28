@@ -13,13 +13,13 @@ export async function createEditCabin(newCabin, id) {
   // * [Edge Case] : in the UI "CreateCabinForm", and only for editing a cabin
   // * if you specify an image ==> you will send a FileList type for image value
   // * if you don't ==> you will send a url as image type
-  const hasImagePath = newCabin.image?.startsWith?.(supabase);
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 
   // if there is any slash included in image name
   // supabase will create a folder with a name after '/'
   // and that's not what we want
   const imageName = `${Math.random()}-${
-    newCabin.image.name
+    newCabin.image?.name
   }`.replaceAll("/", "");
   const imagePath = hasImagePath
     ? newCabin.image
@@ -30,15 +30,16 @@ export async function createEditCabin(newCabin, id) {
 
   // A) CREATE
   if (!id) {
-    query.insert([{ ...newCabin, image: imagePath }]);
+    query = query.insert([{ ...newCabin, image: imagePath }]);
   }
 
   // B) EDIT
   if (id) {
-    query
-      .update({ other_column: "otherValue" })
-      .eq("id", id)
-      .select();
+    console.log(newCabin, id);
+
+    query = query
+      .update({ ...newCabin, image: imagePath })
+      .eq("id", id);
   }
 
   const { data, error } = await query.select().single();
