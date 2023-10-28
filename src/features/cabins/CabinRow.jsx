@@ -1,9 +1,9 @@
 import { formatCurrency } from "../../utils/helpers";
 import { useState } from "react";
 import { useDeleteCabin } from "./useDeleteCabin";
-
 import styled from "styled-components";
 import CreateCabinForm from "./CreateCabinForm";
+import { FaCopy } from "react-icons/fa";
 
 // v1
 const TableRow = styled.div`
@@ -73,6 +73,9 @@ function CabinRow({ cabin }) {
         )}
 
         <div>
+          <button>
+            <FaCopy />
+          </button>
           <button onClick={() => setShowForm((show) => !show)}>
             Edit
           </button>
