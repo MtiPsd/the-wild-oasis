@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Textarea } from "./../../ui/Textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
+import { createEditCabin } from "../../services/apiCabins";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -10,17 +10,22 @@ import FileInput from "../../ui/FileInput";
 import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
-function CreateCabinForm() {
+function CreateCabinForm({ cabinToEdit = {} }) {
+  const { id: editId, ...editValues } = cabinToEdit;
+  const isEditSession = Boolean(editId);
+
   // React Hook Forms ---
   const { register, handleSubmit, reset, getValues, formState } =
-    useForm();
+    useForm({
+      defaultValues: isEditSession ? editValues : {},
+    });
   const { errors } = formState;
 
   // React Query  ---
   const queryClient = useQueryClient();
 
   const { mutate, isLoading: isCreating } = useMutation({
-    mutationFn: createCabin,
+    mutationFn: createEditCabin,
     onSuccess: () => {
       toast.success("New cabin successfully created");
       queryClient.invalidateQueries({ queryKey: ["cabins"] });
@@ -30,7 +35,8 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate({ ...data, image: data.image[0] });
+    console.log(data);
+    // mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -125,7 +131,9 @@ function CreateCabinForm() {
           accept="image/*"
           disabled={isCreating}
           {...register("image", {
-            required: "This field is required",
+            required: isEditSession
+              ? false
+              : "This field is required",
           })}
         />
       </FormRow>
@@ -135,7 +143,9 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>Add cabin</Button>
+        <Button disabled={isCreating}>
+          {isEditSession ? "Edit cabin" : "Create new cabin"}
+        </Button>
       </FormRow>
     </Form>
   );
