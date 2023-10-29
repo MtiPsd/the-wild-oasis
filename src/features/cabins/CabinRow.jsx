@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDeleteCabin } from "./useDeleteCabin";
 import styled from "styled-components";
 import CreateCabinForm from "./CreateCabinForm";
-import { FaCopy } from "react-icons/fa";
+import { FaCopy, FaEdit, FaTrash } from "react-icons/fa";
 
 // v1
 const TableRow = styled.div`
@@ -77,14 +77,14 @@ function CabinRow({ cabin }) {
             <FaCopy />
           </button>
           <button onClick={() => setShowForm((show) => !show)}>
-            Edit
+            <FaEdit />
           </button>
 
           <button
             onClick={() => deleteCabin(cabinId)}
             disabled={isDeleting}
           >
-            Delete
+            <FaTrash />
           </button>
         </div>
       </TableRow>
