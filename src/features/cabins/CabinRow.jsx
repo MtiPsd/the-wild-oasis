@@ -4,6 +4,7 @@ import { useDeleteCabin } from "./useDeleteCabin";
 import styled from "styled-components";
 import CreateCabinForm from "./CreateCabinForm";
 import { FaCopy, FaEdit, FaTrash } from "react-icons/fa";
+import { useCreateCabin } from "./useCreateCabin";
 
 // v1
 const TableRow = styled.div`
@@ -49,6 +50,7 @@ const Discount = styled.div`
 function CabinRow({ cabin }) {
   const [showForm, setShowForm] = useState(false);
   const { isDeleting, deleteCabin } = useDeleteCabin();
+  const { isCreating, createCabin } = useCreateCabin();
 
   const {
     id: cabinId,
@@ -57,7 +59,19 @@ function CabinRow({ cabin }) {
     regularPrice,
     discount,
     image,
+    description,
   } = cabin;
+
+  function handleDuplicate() {
+    createCabin({
+      name: `Copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description,
+    });
+  }
 
   return (
     <>
@@ -73,7 +87,7 @@ function CabinRow({ cabin }) {
         )}
 
         <div>
-          <button>
+          <button disabled={isCreating} onClick={handleDuplicate}>
             <FaCopy />
           </button>
           <button onClick={() => setShowForm((show) => !show)}>
