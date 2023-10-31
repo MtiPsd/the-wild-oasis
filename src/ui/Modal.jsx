@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 const StyledModal = styled.div`
@@ -50,14 +51,19 @@ const Button = styled.button`
 `;
 
 function Modal({ children, onClose }) {
-  return (
+  // why using createPortal ?
+  // maybe some other developer using our code
+  // place this components where the parent element has
+  // "overflow: hidden" css property, so it creates conflict
+  return createPortal(
     <Overlay>
       <StyledModal>
         <Button onClick={onClose}>X</Button>
 
         <div>{children}</div>
       </StyledModal>
-    </Overlay>
+    </Overlay>,
+    document.body,
   );
 }
 export default Modal;
