@@ -49,11 +49,12 @@ const Button = styled.button`
   }
 `;
 
-function Modal({ children }) {
+function Modal({ children, onClose }) {
   return (
     <Overlay>
       <StyledModal>
-        <Button>X</Button>
+        <Button onClick={onClose}>X</Button>
+
         <div>{children}</div>
       </StyledModal>
     </Overlay>
