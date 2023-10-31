@@ -1,25 +1,49 @@
-import { useState } from "react";
 import Modal from "../../ui/Modal";
 import Button from "./../../ui/Button";
 import CreateCabinForm from "./CreateCabinForm";
 
 function AddCabin() {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
   return (
-    <div>
-      <Button onClick={() => setIsOpenModal((show) => !show)}>
-        Add new cabin
-      </Button>
-      {isOpenModal && (
-        <Modal onClose={() => setIsOpenModal(false)}>
-          <CreateCabinForm
-            onCloseModal={() => setIsOpenModal(false)}
-          />
-        </Modal>
-      )}
-    </div>
+    <Modal>
+      <Modal.Open opens="cabin-form">
+        <Button>Add new cabin</Button>
+      </Modal.Open>
+
+      <Modal.Window opens="cabin-form">
+        <CreateCabinForm />
+      </Modal.Window>
+
+      {/* <Modal.Open opens="table">
+        <Button>Add new cabin</Button>
+      </Modal.Open>
+
+      <Modal.Window opens="table">
+        <CreateCabinForm />
+      </Modal.Window> */}
+    </Modal>
   );
 }
+
+// ! It is not ideal if "AddCabin" components
+// ! be responsible for opening modal so we must
+// ! use compound component pattern in this case
+// function AddCabin() {
+//   const [isOpenModal, setIsOpenModal] = useState(false);
+
+//   return (
+//     <div>
+//       <Button onClick={() => setIsOpenModal((show) => !show)}>
+//         Add new cabin
+//       </Button>
+//       {isOpenModal && (
+//         <Modal onClose={() => setIsOpenModal(false)}>
+//           <CreateCabinForm
+//             onCloseModal={() => setIsOpenModal(false)}
+//           />
+//         </Modal>
+//       )}
+//     </div>
+//   );
+// }
 
 export default AddCabin;
