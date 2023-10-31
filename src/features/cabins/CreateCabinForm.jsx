@@ -7,7 +7,7 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import FormRow from "../../ui/FormRow";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const {
     getValues,
     handleSubmit,
@@ -17,10 +17,13 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     isEditSession,
     errors,
     isWorking,
-  } = useFormCabin(cabinToEdit);
+  } = useFormCabin(cabinToEdit, onCloseModal);
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow error={errors?.name?.message} label="cabin name">
         <Input
           type="text"
@@ -115,7 +118,11 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>

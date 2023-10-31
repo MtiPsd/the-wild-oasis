@@ -1,3 +1,10 @@
+import {
+  cloneElement,
+  createContext,
+  useContext,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 const StyledModal = styled.div`
@@ -49,7 +56,62 @@ const Button = styled.button`
   }
 `;
 
-function Modal() {
-  return <StyledModal>Modal</StyledModal>;
+const ModalContext = createContext();
+
+function Modal({ children }) {
+  const [openName, setOpenName] = useState("");
+
+  const onClose = () => setOpenName("");
+  const onOpen = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ onClose, onOpen, openName }}>
+      {children}
+    </ModalContext.Provider>
+  );
 }
+
+function Open({ opens: opensWindowName, children }) {
+  const { onOpen } = useContext(ModalContext);
+
+  // pretty advanced and uncommon react function
+  // ! It should not be over used
+  return cloneElement(children, {
+    onClick: () => onOpen(opensWindowName),
+  });
+}
+
+function Window({ name, children }) {
+  const { openName, onClose } = useContext(ModalContext);
+
+  if (name !== openName) {
+    return null;
+  }
+
+  // why using createPortal ?
+  // maybe some other developer using our code
+  // place this components where the parent element has
+  // "overflow: hidden" css property, so it creates conflict
+  return createPortal(
+    <Overlay>
+      <StyledModal>
+        <Button onClick={onClose}>X</Button>
+
+        {/* it is necessary for styling ...
+            don't ask why :(
+         */}
+        <div>
+          {cloneElement(children, {
+            onCloseModal: onClose,
+          })}
+        </div>
+      </StyledModal>
+    </Overlay>,
+    document.body,
+  );
+}
+
+Modal.Open = Open;
+Modal.Window = Window;
+
 export default Modal;
