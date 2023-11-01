@@ -77,10 +77,6 @@ function CabinRow({ cabin }) {
 
       <div>
         <Modal>
-          <button disabled={isCreating}>
-            <FaCopy />
-          </button>
-
           <Modal.Open opens="edit">
             <button>
               <FaEdit />
