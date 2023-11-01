@@ -8,6 +8,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
+import { useOutSideClick } from "../hooks/useOutSideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -85,18 +86,7 @@ function Open({ opens: opensWindowName, children }) {
 
 function Window({ name, children }) {
   const { openName, onClose } = useContext(ModalContext);
-  const ref = useRef();
-
-  useEffect(() => {
-    function handleClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) {
-        onClose();
-      }
-    }
-    document.addEventListener("click", handleClick, true);
-    return () =>
-      document.removeEventListener("click", handleClick, true);
-  }, [onClose]);
+  const ref = useOutSideClick(onClose);
 
   if (name !== openName) {
     return null;
