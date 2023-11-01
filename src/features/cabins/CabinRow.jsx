@@ -40,7 +40,7 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
   const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { isCreating, createCabin } = useCreateCabin();
+  const { createCabin } = useCreateCabin();
 
   const {
     id: cabinId,
@@ -77,20 +77,31 @@ function CabinRow({ cabin }) {
 
       <div>
         <Modal>
-          <Modal.Open opens="edit">
-            <button>
-              <FaEdit />
-            </button>
-          </Modal.Open>
+          <Menus.Menu>
+            <Menus.Toggle id={cabinId}></Menus.Toggle>
+
+            <Menus.List id={cabinId}>
+              <Menus.Button
+                icon={<FaCopy />}
+                onClick={handleDuplicate}
+              >
+                Duplicate
+              </Menus.Button>
+
+              <Modal.Open opens="edit">
+                <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open opens="delete">
+                <Menus.Button icon={<FaTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+          </Menus.Menu>
+
           <Modal.Window name="edit">
             <CreateCabinForm cabinToEdit={cabin} />
           </Modal.Window>
 
-          <Modal.Open opens="delete">
-            <button>
-              <FaTrash />
-            </button>
-          </Modal.Open>
           <Modal.Window name="delete">
             <ConfirmDelete
               resource="cabins"
@@ -99,18 +110,6 @@ function CabinRow({ cabin }) {
             />
           </Modal.Window>
         </Modal>
-
-        <Menus.Menu>
-          <Menus.Toggle id={cabinId}></Menus.Toggle>
-
-          <Menus.List id={cabinId}>
-            <Menus.Button icon={<FaCopy />} onClick={handleDuplicate}>
-              Duplicate
-            </Menus.Button>
-            <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
-            <Menus.Button icon={<FaTrash />}>Delete</Menus.Button>
-          </Menus.List>
-        </Menus.Menu>
       </div>
     </Table.Row>
   );
