@@ -2,6 +2,8 @@ import {
   cloneElement,
   createContext,
   useContext,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
@@ -83,6 +85,18 @@ function Open({ opens: opensWindowName, children }) {
 
 function Window({ name, children }) {
   const { openName, onClose } = useContext(ModalContext);
+  const ref = useRef();
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        onClose();
+      }
+    }
+    document.addEventListener("click", handleClick, true);
+    return () =>
+      document.removeEventListener("click", handleClick, true);
+  }, [onClose]);
 
   if (name !== openName) {
     return null;
@@ -94,7 +108,7 @@ function Window({ name, children }) {
   // "overflow: hidden" css property, so it creates conflict
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={onClose}>X</Button>
 
         {/* it is necessary for styling ...
