@@ -6,6 +6,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
+import { useOutSideClick } from "../hooks/useOutSideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -83,6 +84,7 @@ function Open({ opens: opensWindowName, children }) {
 
 function Window({ name, children }) {
   const { openName, onClose } = useContext(ModalContext);
+  const ref = useOutSideClick(onClose);
 
   if (name !== openName) {
     return null;
@@ -94,7 +96,7 @@ function Window({ name, children }) {
   // "overflow: hidden" css property, so it creates conflict
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={onClose}>X</Button>
 
         {/* it is necessary for styling ...
