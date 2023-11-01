@@ -77,7 +77,7 @@ function CabinRow({ cabin }) {
 
       <div>
         <Modal>
-          <button disabled={isCreating} onClick={handleDuplicate}>
+          <button disabled={isCreating}>
             <FaCopy />
           </button>
 
@@ -108,9 +108,11 @@ function CabinRow({ cabin }) {
           <Menus.Toggle id={cabinId}></Menus.Toggle>
 
           <Menus.List id={cabinId}>
-            <Menus.Button>Duplicate</Menus.Button>
-            <Menus.Button>Edit</Menus.Button>
-            <Menus.Button>Delete</Menus.Button>
+            <Menus.Button icon={<FaCopy />} onClick={handleDuplicate}>
+              Duplicate
+            </Menus.Button>
+            <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
+            <Menus.Button icon={<FaTrash />}>Delete</Menus.Button>
           </Menus.List>
         </Menus.Menu>
       </div>

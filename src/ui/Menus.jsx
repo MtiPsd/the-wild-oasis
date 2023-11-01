@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { FaEllipsisV } from "react-icons/fa";
 
 import styled from "styled-components";
+import { useOutSideClick } from "../hooks/useOutSideClick";
 
 const Menu = styled.div`
   display: flex;
@@ -83,7 +84,7 @@ function Menus({ children }) {
 }
 
 function Toggle({ id }) {
-  const { openId, close, open, position, setPosition } =
+  const { openId, close, open, setPosition } =
     useContext(MenusContext);
 
   function handleClick(e) {
@@ -109,20 +110,33 @@ function Toggle({ id }) {
 }
 
 function List({ id, children }) {
-  const { openId, position } = useContext(MenusContext);
+  const { openId, position, close } = useContext(MenusContext);
+  const ref = useOutSideClick(close);
 
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position}>{children}</StyledList>,
+    <StyledList position={position} ref={ref}>
+      {children}
+    </StyledList>,
     document.body,
   );
 }
 
-function Button({ children }) {
+function Button({ children, icon, onClick }) {
+  const { close } = useContext(MenusContext);
+
+  function handleClick() {
+    onClick?.();
+    close();
+  }
+
   return (
     <li>
-      <StyledButton>{children}</StyledButton>
+      <StyledButton onClick={handleClick}>
+        {icon}
+        <span>{children}</span>
+      </StyledButton>
     </li>
   );
 }
